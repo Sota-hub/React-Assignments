@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Children, useState } from "react";
 import { Routes, Route, useRoutes } from "react-router-dom";
 
 import CustomLink from "./components/CustomLink";
@@ -14,29 +14,14 @@ const Register = React.lazy(() => import("./pages/Register"));
 const Login = React.lazy(() => import("./pages/Login"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
-// reddit/r/search?q=cats&src=caturday
-// {q: 'cats',src: 'caturday'}
-
 const App = () => {
-  const [user, setUser] = useState('')
-  
-  const routes = useRoutes([
-    { path: "/", element: <Home /> },
-    { path: "/login", element: <Login /> },
-    { path: "/register", element: <Register /> },
-    { path: "/dashboard", element: <Dashboard /> },
-    { path: "/post/:postId", element: <PostPage /> },
-    { path: "/comments", element: <Comments /> },
-    { path: "/profile", element: <Profile /> },
-    { path: "*", element: <NotFound /> },
-    { 
-      path: "/messages", 
-      element: <Messages />, 
-      children: [
-        { path: ":id", element: <Chats /> }
-      ]
-    },
-  ])
+  const [user, setUser] = useState(false)
+
+  const ProtectedRoute = ({user, children}) => {
+    if (user) return children
+    return <NotFound />
+  }
+
   return (
     <div className="wrapper">
       <div className="sidebar">
@@ -44,31 +29,32 @@ const App = () => {
           <li>
             <CustomLink to="/">Home</CustomLink>
           </li>
-          <li>
-            <CustomLink to="/login">Login</CustomLink>
-          </li>
-          <li>
-            <CustomLink to="/register">Register</CustomLink>
-          </li>
+          {!user && (
+            <>
+            <li>
+              <CustomLink to="/login">Login</CustomLink>
+            </li>
+            <li>
+              <CustomLink to="/register">Register</CustomLink>
+            </li>
+            </>
+            )}
           <li>
             <CustomLink to="/dashboard">Dashboard</CustomLink>
           </li>
         </ul>
-        {/* <Routes>
-          <Route path="/" element={<p>This is your home page</p>} />
-          <Route path="/login" element={<p>This is your login page</p>} />
-          <Route path="/register" element={<p>This is your register page</p>} />
-        </Routes> */}
       </div>
-
       <div className="content">
         <React.Suspense fallback={<p>Loading...</p>}>
-          {routes}
-          {/* <Routes>
+          <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard name={"Hoge"} />} />
+            <Route path="/register" element={<Register setUser={setUser} />} />
+            <Route path="/login" element={<Login setUser={setUser}/>} />
+            <Route path="/dashboard" element={
+            <ProtectedRoute user={user}>
+              <Dashboard name="Sota" />
+            </ProtectedRoute>
+            } />
             <Route path="/post/:postId" element={<PostPage />} />
             <Route path="/comments" element={<Comments />} />
             <Route path="/profile" element={<Profile />} />
@@ -76,7 +62,7 @@ const App = () => {
               <Route path=":id" element={<Chats />} />
             </Route>
             <Route path="*" element={<NotFound />} />
-          </Routes> */}
+          </Routes>
         </React.Suspense>
       </div>
     </div>
