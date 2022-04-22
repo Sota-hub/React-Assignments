@@ -24,4 +24,4 @@ const Snack = ({ snack, handleQuantity, getRandomColor }) => {
   );
 };
 
-export default Snack;
+export default React.memo(Snack);

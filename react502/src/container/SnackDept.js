@@ -1,29 +1,28 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useCallback } from "react";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 import Snack from "../components/Snack";
 import { snackUpdate } from "../redux/actions/action";
 
 const SnackDept = () => {
-  const snackData = useSelector((state) => state.snack.snackData);
-  console.log(snackData);
+  const snackData = useSelector((state) => state.snack.snackData.slice(0,2), shallowEqual);
   const dispatch = useDispatch();
 
   console.log("SNACK RENDER");
 
-  const handleQuantity = (operator, id) => {
+  const handleQuantity = useCallback((operator, id) => {
     //dispatch to redux store
     dispatch(snackUpdate(operator, id));
-  };
+  }, []);
 
-  const getRandomColor = () => {
+  const getRandomColor = useCallback(() => {
     let color ="#"
     let letter = "0123456789ABCDEF"
     for(let i = 0; i < 6; i++){
       color += letter[Math.floor(Math.random() * 16)]
     }
     return color
-  }
+  }, [])
 
   return (
     <>
