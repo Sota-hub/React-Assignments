@@ -1,5 +1,14 @@
 # Interview Questions for React Developers
 
+### What are the different phases of React component’s lifecycle?
+- Mounting
+- Updating
+- Unmounting
+
+### What is the difference between a Container and a Component?
+- **Container** is considered that the component has a relation between server side like fetch.
+- **Component** renders HTML. Just for React UI.
+
 ### What is React JS? What are the advantages compared to other JavaScript frameworks?
 React is an efficient, declarative, and flexible open-source front-end JavaScript library for building simple, fast and scalable front-ends. It is developed by Facebook in 2011.
 
